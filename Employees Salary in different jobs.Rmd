@@ -1,0 +1,198 @@
+# Employee Salaries for different job roles
+
+1.  Uploading the data
+
+```{r}
+getwd()
+```
+
+```{r}
+setwd("C:/Users/parul/Desktop/Congno Rise Internship")
+```
+
+```{r}
+ds_salaries<-read.csv("C:/Users/parul/Desktop/Congno Rise Internship/ds_salaries.csv")
+```
+
+```{r}
+ds_salaries
+```
+
+2.  Downloading the packages required
+
+```{r}
+library("ggplot2")
+```
+
+```{r}
+library("dplyr")
+```
+
+```{r}
+library("corrplot")
+```
+
+```{r}
+install.packages("plotly")
+```
+
+```{r}
+library("plotly")
+```
+
+```{r}
+library("tidyr")
+```
+
+3.  Running the regression to predict salary
+
+```{r}
+lm_salary<-lm(salary~X+work_year+experience_level+employment_type+job_title+
+                employee_residence+remote_ratio+company_location+company_size,data = ds_salaries)
+```
+
+```{r}
+summary(lm_salary)
+```
+
+3.  Summary Statistics for numerical values
+
+```{r}
+summary(ds_salaries[c("salary","salary_in_usd")])
+```
+
+4.  ANOVA to test the differences in salary by work_year
+
+```{r}
+aov_salary_work_year<-aov(salary~work_year,data=ds_salaries)
+```
+
+```{r}
+summary(aov_salary_work_year)
+```
+
+5.  ANOVA to test the differences in salary by experience_level
+
+```{r}
+aov_salary_experience_level<-aov(salary~experience_level,data = ds_salaries)
+```
+
+```{r}
+summary(aov_salary_experience_level)
+```
+
+6.  Correlation between numeric variables
+
+```{r}
+cor_matt<-cor(ds_salaries[c("X","salary","salary_in_usd")])
+```
+
+```{r}
+cor_matt
+```
+
+```{r}
+corrplot(cor_matt,method = "circle",tl.srt=45,type="upper",tl.cex = 0.5,tl.col = "black")
+```
+
+7.  Box plot to visualize salary distribution according to work year
+
+```{r}
+ggplot(ds_salaries, aes(x = experience_level, y = salary)) +
+  geom_boxplot(fill="purple") +
+  theme_minimal() + 
+  labs(title = "Salary by Experience Level")
+```
+
+8.  Boxplot
+
+```{r}
+ggplot(ds_salaries, aes(x = experience_level, y = salary)) + 
+  geom_boxplot() +
+  facet_wrap(~work_year) +
+  theme_minimal() + 
+  labs(title = "Salary by Experience Level and Work Year")
+```
+
+9.  Box plot of salary by Job Title
+
+```{r}
+ggplot(ds_salaries, aes(x = job_title, y = salary)) + 
+  geom_boxplot(fill="thistle",color="#35063E") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "Boxplot of Salary by Job Title",x="Job Title",y="Salary")
+```
+
+10. Histogram of Salary
+
+```{r}
+ggplot(ds_salaries,aes(x=salary))+
+  geom_histogram(bins = 30,fill="#9F87E3")+
+  theme_minimal()+
+  labs(title = "Histogram of Salary",x="Salary",y="Frequency")
+```
+
+11. Bar plot of job title frequencies
+
+```{r}
+ggplot(ds_salaries, aes(x = job_title)) + 
+  geom_bar(fill="#C25283") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "Bar Plot of Job Title Frequencies",x="Job Title",y="Count")
+```
+
+12. Bar plot of employee residence frequencies
+
+```{r}
+ggplot(ds_salaries, aes(x = employee_residence)) + 
+  geom_bar(fill="#4E1F33") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "Bar Plot of Employee Residence Frequencies",x="Employee Residence",y="Count")
+```
+
+13. Histogram of Salary by work year
+
+```{r}
+ggplot(ds_salaries, aes(x = salary)) + 
+  geom_histogram(bins = 30,fill="navy") + 
+  facet_wrap(~work_year) + 
+  labs(title = "Histogram of Salary by Work Year")
+```
+
+14. Donut Chart for Employment Type
+
+```{r}
+employment_type_counts <- table(ds_salaries$employment_type)
+```
+
+```{r}
+employment_type_counts
+```
+
+```{r}
+plot_ly(ds_salaries,labels= ~employment_type,type = "pie",hole=0.7,textposition="inside")
+```
+
+15. Donut Chart for Company size
+
+```{r}
+plot_ly(ds_salaries,labels= ~company_size,type="pie",hole=0.5,textposition="inside")
+```
+
+16. Number of Companies as per Remote ratio
+
+```{r}
+ggplot(ds_salaries,aes(x=remote_ratio))+
+  geom_bar(fill="#CCCAA8")+
+  labs(title="Number of Companies as per Remote Ratio",x="Remote Ratio",y="Count")+
+  theme_minimal()
+```
+
+17. Number of Companies as per Company's Location
+
+```{r}
+ggplot(ds_salaries,aes(x=company_location))+
+  geom_bar(fill="#496679")+
+  labs(title = "Number of Companies as per Location",x="Company's Location",y="Count")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
